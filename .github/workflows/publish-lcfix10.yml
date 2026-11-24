@@ -1,0 +1,37 @@
+name: Publish verified File Browser Windows build
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-lcfix10.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    if: github.repository == '136084599/filebrowser-transfer-fixes'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TAG: v2.0.1-lcfix10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Verify assets and publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo 'Release already exists. Existing assets were left in place.'
+            exit 0
+          fi
+          printf '%s  %s\n' '4899b2239e7d7d246ba6bb3754a9479130753965ec0138ae4329c0e9f052306e' 'downloads/FileBrowser-LC-Fix-10-Windows-x64.zip' | sha256sum --check
+          work=$(mktemp -d)
+          unzip -q downloads/FileBrowser-LC-Fix-10-Windows-x64.zip -d "$work"
+          (cd "$work" && sha256sum --check SHA256SUMS.txt)
+          gh release create "$TAG" downloads/FileBrowser-LC-Fix-10-Windows-x64.zip "$work/filebrowser-transfer-fixes-lcfix10-windows-amd64.exe" "$work/config.example.yaml" "$work/SHA256SUMS.txt" \
+            --target "$GITHUB_SHA" --title 'File Browser Quantum · LC Fix 10 · Windows x64' \
+            --notes '[维护源码](https://github.com/136084599/filebrowser/tree/lcfix10) · [安装、迁移、回滚与构建](https://github.com/136084599/filebrowser/blob/lcfix10/LCFIX10.md)。Windows x64 的 EXE、示例配置和 SHA-256。该构建的本机启动、首页与管理员登录已验证，EXE 未做 Authenticode 签名。'
