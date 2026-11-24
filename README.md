@@ -1,4 +1,4 @@
-> **使用者入口**　Windows 构建和校验值请查看 [正式 fork 的 Releases](https://github.com/136084599/filebrowser/releases)。
+> **Windows x64 下载**　[LC Fix 10 整包](downloads/FileBrowser-LC-Fix-10-Windows-x64.zip)包括 EXE、示例配置、SHA-256 和操作说明。解压后参照维护说明运行。
 > 修复源码在 [`lcfix10` 分支](https://github.com/136084599/filebrowser/tree/lcfix10)。[下载、首次启动、升级、回滚和构建说明](https://github.com/136084599/filebrowser/blob/lcfix10/LCFIX10.md)。
 > 本仓保存可应用到指定上游提交的补丁和许可证，便于查看修改与复现。上游为 [File Browser Quantum](https://github.com/gtsteffaniak/filebrowser)。
 
